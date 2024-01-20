@@ -93,4 +93,9 @@ function handalSearch() {
 }
 
 const closeButon = document.querySelector('.search-close-icon');
-console.log()
+closeButon.addEventListener('click',clearSearch);
+
+function clearSearch() {
+    searhInput.value = '';displayPokemons(allPokemons);
+    notFoudMessage.display
+}

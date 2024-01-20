@@ -170,7 +170,7 @@
   .search-close-icon {
     position: absolute;
     right: 1rem;
-    display: none;
+    display: block;
     cursor: pointer;
   }
   

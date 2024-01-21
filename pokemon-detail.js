@@ -30,6 +30,31 @@ async function loadPokemon(id) {
 
         if (currentPokemonID === id) {
             displayPokemonDetail(pokemon);
+            const flavorrText = getEnglishFlavorText(pokemonsSpecies);
+            
+            document.querySelector(
+                '.body3-fonts.pokemon-description'
+                ).textContent = flavorrText;
+
+
+                const[leftArrow,rightArrow] = ['#leftArrow','#rightArrow'].map((sel)=> document.querySelector(sel));
+               
+                leftArrow.removeEventListener('click',navigatePokemon);
+                rightArrow.removeEventListener('click',navigatePokemon);
+                
+                if (id !== 1){
+                    leftArrow.addEventListener('click',() => {
+                        navigatePokemon(id - 1);
+                    });
+                }
+
+                if (id !== 151){
+                    rightArrow.addEventListener('click',() => {
+                        navigatePokemon(id + 1);
+                    });
+                }
+
+                window.history.pushState({},'',`./detail.html?id=${id}`);
         }
 
         return true;
@@ -37,6 +62,22 @@ async function loadPokemon(id) {
     } catch (error) {
         console.error('An error occured while fetching pokemon data:', error)
     }
+}
+
+async function navigatePokemon(id) {
+    currentPokemonID = id;
+    await loadPokemon(id);
+}
+
+function getEnglishFlavorText(pokemonsSpecies) {
+    
+    for(let entry of pokemonsSpecies.flavor_text_entries) {
+        if(entry.language.name ==='en') {
+            let flavor = entry.flavor_text.replace(/\f/g, ' ');
+            return flavor;
+        }
+    }
+    return'';
 }
 
 function capitalizeFirtLetter(string) {
@@ -73,6 +114,20 @@ const typeColors = {
     steel: "#B8B8D0",
     dark: "#EE99AC",
   };
+
+  function setElelmentStyles(elements,csspropperty,value) {
+    elements.forEach((element) => {
+        element.style[csspropperty] = value
+    });
+  };
+  function rgbaFronHex(hexColor) {
+    return [
+        parseInt(hexColor.slice(1,3),16),
+        parseInt(hexColor.slice(3,5),16),
+        parseInt(hexColor.slice(5,7),16),
+    ].join(', ');
+  }
+
 function setTypeBackgroundColor(pokemon){
     const mainType = pokemon.types[0].type.name;
     const color = typeColors[mainType];
@@ -85,8 +140,41 @@ function setTypeBackgroundColor(pokemon){
     const detailMainElement = document.querySelector('.detail-main');
 
 
-    setElelmentStyles([detailMainElement], '');
+    setElelmentStyles([detailMainElement], 'backgroundColor', color);
+   
+    setElelmentStyles([detailMainElement], 'borderColor', color);
+   
+    setElelmentStyles(document.querySelectorAll('.power-wrapper > p'),
+    'bacgroundColor', color);
+
+    setElelmentStyles(document.querySelectorAll('.stats-wrap p.stats'),
+    'color', color);
+
+    setElelmentStyles(document.querySelectorAll('.stats-wrap .progress-bar'),
+    'color', color);
+
+        const rgbaColor = rgbaFronHex(color);
+
+        const styleTag = document.createElement('style');
+       styleTag.innerHTML = `
+            .stats-wrap .progress-bar::-webkit-progress-bar {
+                background-color: rgba(${rgbaColor}, 0.5);
+            }
+
+            .stats-wrap .progress-bar::-webkit-progress-value {
+                background-color: rgba${color};
+            }
+
+       `;
+       
+       document.head.appendChild(styleTag);
+
+
+    
+
 }
+
+
 
 
 function displayPokemonDetail(pokemon) {

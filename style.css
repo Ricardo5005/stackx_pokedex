@@ -170,7 +170,7 @@
   .search-close-icon {
     position: absolute;
     right: 1rem;
-    display: block;
+    display: none;
     cursor: pointer;
   }
   
@@ -191,6 +191,10 @@
     top: 40px;
     display: none;
     z-index: 5000;
+  }
+  .filter-wrapper:hover{
+    cursor: pointer;
+    transition: .4s;
   }
   
   .filter-wrapper-open {

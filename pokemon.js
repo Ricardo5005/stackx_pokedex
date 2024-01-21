@@ -97,5 +97,5 @@ closeButon.addEventListener('click',clearSearch);
 
 function clearSearch() {
     searhInput.value = '';displayPokemons(allPokemons);
-    notFoudMessage.display
+    notFoudMessage.style.display = 'none';
 }
